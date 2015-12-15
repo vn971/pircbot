@@ -1,16 +1,8 @@
 /* 
-Copyright Paul James Mutton, 2001-2009, http://www.jibble.org/
-
 This file is part of PircBot.
-
-This software is dual-licensed, allowing you to choose between the GNU
-General Public License (GPL) and the www.jibble.org Commercial License.
-Since the GPL may be too restrictive for use in a proprietary application,
-a commercial license is also provided. Full license information can be
-found at http://www.jibble.org/licenses/
-
+This software is licensed under GNU General Public License (GPL)
+version 2 or (at your option) any later version.
 */
-
 
 package org.jibble.pircbot;
 
@@ -18,11 +10,6 @@ import java.util.*;
 
 /**
  * This class is used to process DCC events from the server.
- *
- * @since   1.2.0
- * @author  Paul James Mutton,
- *          <a href="http://www.jibble.org/">http://www.jibble.org/</a>
- * @version    1.5.0 (Build time: Mon Dec 14 20:07:17 2009)
  */
 public class DccManager {
     
@@ -70,7 +57,7 @@ public class DccManager {
             DccFileTransfer transfer = null;
             synchronized (_awaitingResume) {
                 for (int i = 0; i < _awaitingResume.size(); i++) {
-                    transfer = (DccFileTransfer) _awaitingResume.elementAt(i);
+                    transfer = _awaitingResume.elementAt(i);
                     if (transfer.getNick().equals(nick) && transfer.getPort() == port) {
                         _awaitingResume.removeElementAt(i);
                         break;
@@ -91,7 +78,7 @@ public class DccManager {
             DccFileTransfer transfer = null;
             synchronized (_awaitingResume) {
                 for (int i = 0; i < _awaitingResume.size(); i++) {
-                    transfer = (DccFileTransfer) _awaitingResume.elementAt(i);
+                    transfer = _awaitingResume.elementAt(i);
                     if (transfer.getNick().equals(nick) && transfer.getPort() == port) {
                         _awaitingResume.removeElementAt(i);
                         break;
@@ -146,6 +133,6 @@ public class DccManager {
     
     
     private PircBot _bot;
-    private Vector _awaitingResume = new Vector();
+    private Vector<DccFileTransfer> _awaitingResume = new Vector<DccFileTransfer>();
     
 }

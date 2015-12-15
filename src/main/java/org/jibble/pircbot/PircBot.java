@@ -1,16 +1,8 @@
 /* 
-Copyright Paul James Mutton, 2001-2009, http://www.jibble.org/
-
 This file is part of PircBot.
-
-This software is dual-licensed, allowing you to choose between the GNU
-General Public License (GPL) and the www.jibble.org Commercial License.
-Since the GPL may be too restrictive for use in a proprietary application,
-a commercial license is also provided. Full license information can be
-found at http://www.jibble.org/licenses/
-
+This software is licensed under GNU General Public License (GPL)
+version 2 or (at your option) any later version.
 */
-
 
 package org.jibble.pircbot;
 
@@ -48,10 +40,6 @@ import java.util.*;
  * for full revision history, a beginners guide to creating your first PircBot
  * and a list of some existing Java IRC bots and clients that use the PircBot
  * framework.
- * 
- * @author  Paul James Mutton,
- *          <a href="http://www.jibble.org/">http://www.jibble.org/</a>
- * @version    1.5.0 (Build time: Mon Dec 14 20:07:17 2009)
  */
 public abstract class PircBot implements ReplyConstants {
 
@@ -61,8 +49,8 @@ public abstract class PircBot implements ReplyConstants {
      * (Note: Change this before automatically building releases)
      */
     public static final String VERSION = "1.5.0";
-    
-    
+
+
     private static final int OP_ADD = 1;
     private static final int OP_REMOVE = 2;
     private static final int VOICE_ADD = 3;
@@ -744,6 +732,7 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @deprecated As of PircBot 1.2.0, use {@link #onIncomingFileTransfer(DccFileTransfer)}
      */
+    @Deprecated
     protected final void dccReceiveFile(File file, long address, int port, int size) {
         throw new RuntimeException("dccReceiveFile is deprecated, please use sendFile");
     }
@@ -833,6 +822,7 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @deprecated As of PircBot 1.2.0, use {@link #onIncomingChatRequest(DccChat)}
      */
+    @Deprecated
     protected final DccChat dccAcceptChatRequest(String sourceNick, long address, int port) {
         throw new RuntimeException("dccAcceptChatRequest is deprecated, please use onIncomingChatRequest");
     }
@@ -1155,7 +1145,7 @@ public abstract class PircBot implements ReplyConstants {
                 // Stick with the default value of zero.
             }
             
-            String topic = (String) _topics.get(channel);
+            String topic = _topics.get(channel);
             _topics.remove(channel);
             
             this.onTopic(channel, topic, setBy, date, false);
@@ -1407,6 +1397,7 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @deprecated As of 1.2.0, replaced by {@link #onTopic(String,String,String,long,boolean)}
      */
+    @Deprecated
     protected void onTopic(String channel, String topic) {}
     
 
@@ -2102,6 +2093,7 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @deprecated As of PircBot 1.2.0, use {@link #onIncomingFileTransfer(DccFileTransfer)}
      */
+    @Deprecated
     protected void onDccSendRequest(String sourceNick, String sourceLogin, String sourceHostname, String filename, long address, int port, int size) {}
     
     
@@ -2112,6 +2104,7 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @deprecated As of PircBot 1.2.0, use {@link #onIncomingChatRequest(DccChat)}
      */
+    @Deprecated
     protected void onDccChatRequest(String sourceNick, String sourceLogin, String sourceHostname, long address, int port) {}
     
     
@@ -2722,7 +2715,7 @@ public abstract class PircBot implements ReplyConstants {
             return null;
         }
         // Clone the array to prevent external modification.
-        return (int[]) _dccPorts.clone();
+        return _dccPorts.clone();
     }
     
     
@@ -2746,7 +2739,7 @@ public abstract class PircBot implements ReplyConstants {
         }
         else {
             // Clone the array to prevent external modification.
-            _dccPorts = (int[]) ports.clone();
+            _dccPorts = ports.clone();
         }
     }    
     
@@ -2846,12 +2839,12 @@ public abstract class PircBot implements ReplyConstants {
         channel = channel.toLowerCase();
         User[] userArray = new User[0];
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<User, User> users = _channels.get(channel);
             if (users != null) {
                 userArray = new User[users.size()];
-                Enumeration enumeration = users.elements();
+                Enumeration<User> enumeration = users.elements();
                 for (int i = 0; i < userArray.length; i++) {
-                    User user = (User) enumeration.nextElement();
+                    User user = enumeration.nextElement();
                     userArray[i] = user;
                 }
             }
@@ -2873,12 +2866,12 @@ public abstract class PircBot implements ReplyConstants {
      *         are in.
      */
     public final String[] getChannels() {
-        String[] channels = new String[0];
+        String[] channels;
         synchronized (_channels) {
             channels = new String[_channels.size()];
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             for (int i = 0; i < channels.length; i++) {
-                channels[i] = (String) enumeration.nextElement();
+                channels[i] = enumeration.nextElement();
             }
         }
         return channels;
@@ -2915,12 +2908,12 @@ public abstract class PircBot implements ReplyConstants {
      * Add a user to the specified channel in our memory.
      * Overwrite the existing entry if it exists.
      */
-    private final void addUser(String channel, User user) {
+    private void addUser(String channel, User user) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<User, User> users = _channels.get(channel);
             if (users == null) {
-                users = new Hashtable();
+                users = new Hashtable<User, User>(0);
                 _channels.put(channel, users);
             }
             users.put(user, user);
@@ -2931,13 +2924,13 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Remove a user from the specified channel in our memory.
      */
-    private final User removeUser(String channel, String nick) {
+    private User removeUser(String channel, String nick) {
         channel = channel.toLowerCase();
         User user = new User("", nick);
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<User, User> users = _channels.get(channel);
             if (users != null) {
-                return (User) users.remove(user);
+                return users.remove(user);
             }
         }
         return null;
@@ -2949,9 +2942,9 @@ public abstract class PircBot implements ReplyConstants {
      */
     private final void removeUser(String nick) {
         synchronized (_channels) {
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
-                String channel = (String) enumeration.nextElement();
+                String channel = enumeration.nextElement();
                 this.removeUser(channel, nick);
             }
         }
@@ -2961,11 +2954,11 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Rename a user if they appear in any of the channels we know about.
      */
-    private final void renameUser(String oldNick, String newNick) {
+    private void renameUser(String oldNick, String newNick) {
         synchronized (_channels) {
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
-                String channel = (String) enumeration.nextElement();
+                String channel = enumeration.nextElement();
                 User user = this.removeUser(channel, oldNick);
                 if (user != null) {
                     user = new User(user.getPrefix(), newNick);
@@ -2979,7 +2972,7 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Removes an entire channel from our memory of users.
      */
-    private final void removeChannel(String channel) {
+    private void removeChannel(String channel) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
             _channels.remove(channel);
@@ -2992,7 +2985,7 @@ public abstract class PircBot implements ReplyConstants {
      */
     private final void removeAllChannels() {
         synchronized(_channels) {
-            _channels = new Hashtable();
+            _channels = new Hashtable<String, Hashtable<User, User>>();
         }
     }
 
@@ -3000,12 +2993,12 @@ public abstract class PircBot implements ReplyConstants {
     private final void updateUser(String channel, int userMode, String nick) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<User, User> users = _channels.get(channel);
             User newUser = null;
             if (users != null) {
-                Enumeration enumeration = users.elements();
+                Enumeration<User> enumeration = users.elements();
                 while(enumeration.hasMoreElements()) {
-                    User userObj = (User) enumeration.nextElement();
+                    User userObj = enumeration.nextElement();
                     if (userObj.getNick().equalsIgnoreCase(nick)) {
                         if (userMode == OP_ADD) {
                             if (userObj.hasVoice()) {
@@ -3066,16 +3059,16 @@ public abstract class PircBot implements ReplyConstants {
     private String _password = null;
     
     // Outgoing message stuff.
-    private Queue _outQueue = new Queue();
+    private Queue<String> _outQueue = new Queue<String>();
     private long _messageDelay = 1000;
     
     // A Hashtable of channels that points to a selfreferential Hashtable of
     // User objects (used to remember which users are in which channels).
-    private Hashtable _channels = new Hashtable();
+    private Hashtable<String, Hashtable<User, User>> _channels = new Hashtable<String, Hashtable<User, User>>();
     
     // A Hashtable to temporarily store channel topics when we join them
     // until we find out who set that topic.
-    private Hashtable _topics = new Hashtable();
+    private Hashtable<String, String> _topics = new Hashtable<String, String>();
     
     // DccManager to process and handle all DCC events.
     private DccManager _dccManager = new DccManager(this);

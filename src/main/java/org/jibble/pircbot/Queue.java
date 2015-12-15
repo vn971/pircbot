@@ -1,16 +1,8 @@
 /* 
-Copyright Paul James Mutton, 2001-2009, http://www.jibble.org/
-
 This file is part of PircBot.
-
-This software is dual-licensed, allowing you to choose between the GNU
-General Public License (GPL) and the www.jibble.org Commercial License.
-Since the GPL may be too restrictive for use in a proprietary application,
-a commercial license is also provided. Full license information can be
-found at http://www.jibble.org/licenses/
-
+This software is licensed under GNU General Public License (GPL)
+version 2 or (at your option) any later version.
 */
-
 
 package org.jibble.pircbot;
 
@@ -29,12 +21,8 @@ import java.util.Vector;
  * mobile appliances.  This means replacing the LinkedList with
  * a Vector, which is hardly ideal, but this Queue is typically
  * only polled every second before dispatching messages.
- * 
- * @author  Paul James Mutton,
- *          <a href="http://www.jibble.org/">http://www.jibble.org/</a>
- * @version    1.5.0 (Build time: Mon Dec 14 20:07:17 2009)
  */
-public class Queue {
+public class Queue<T> {
     
 
     /**
@@ -46,11 +34,11 @@ public class Queue {
     
     
     /**
-     * Adds an Object to the end of the Queue.
+     * Adds an element T to the end of the Queue.
      *
-     * @param o The Object to be added to the Queue.
+     * @param o The element to be added to the Queue.
      */
-    public void add(Object o) {
+    public void add(T o) {
         synchronized(_queue) {
             _queue.addElement(o);
             _queue.notify();
@@ -59,11 +47,11 @@ public class Queue {
     
     
     /**
-     * Adds an Object to the front of the Queue.
+     * Adds an element to the front of the Queue.
      * 
-     * @param o The Object to be added to the Queue.
+     * @param o The element to be added to the Queue.
      */
-    public void addFront(Object o) {
+    public void addFront(T o) {
         synchronized(_queue) {
             _queue.insertElementAt(o, 0);
             _queue.notify();
@@ -79,9 +67,9 @@ public class Queue {
      *
      * @return The next item from the front of the queue.
      */
-    public Object next() {
+    public T next() {
         
-        Object o = null;
+        T o = null;
         
         // Block if the Queue is empty.
         synchronized(_queue) {
@@ -94,7 +82,7 @@ public class Queue {
                 }
             }
         
-            // Return the Object.
+            // Return the T.
             try {
                 o = _queue.firstElement();
                 _queue.removeElementAt(0);
@@ -141,6 +129,6 @@ public class Queue {
     }
     
 
-    private Vector _queue = new Vector();
+    private Vector<T> _queue = new Vector<T>();
     
 }

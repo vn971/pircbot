@@ -1,14 +1,7 @@
 /* 
-Copyright Paul James Mutton, 2001-2009, http://www.jibble.org/
-
 This file is part of PircBot.
-
-This software is dual-licensed, allowing you to choose between the GNU
-General Public License (GPL) and the www.jibble.org Commercial License.
-Since the GPL may be too restrictive for use in a proprietary application,
-a commercial license is also provided. Full license information can be
-found at http://www.jibble.org/licenses/
-
+This software is licensed under GNU General Public License (GPL)
+version 2 or (at your option) any later version.
 */
 
 package org.jibble.pircbot;
@@ -20,11 +13,6 @@ package org.jibble.pircbot;
  *  <p>
  * Note that this class no longer implements the Comparable interface
  * for Java 1.1 compatibility reasons.
- *
- * @since   1.0.0
- * @author  Paul James Mutton,
- *          <a href="http://www.jibble.org/">http://www.jibble.org/</a>
- * @version    1.5.0 (Build time: Mon Dec 14 20:07:17 2009)
  */
 public class User {
     
