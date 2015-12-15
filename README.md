@@ -12,5 +12,5 @@ SBT can depend on git repositories, use it like:
 
 ```scala
   lazy val root = project.in(file("."))
-    .dependsOn(uri("https://github/vn971/pircbot-sbt"))
+    .dependsOn(uri("git://github.com/vn971/pircbot-sbt"))
 ```
